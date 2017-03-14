@@ -18,7 +18,7 @@ then, you can install cvAUROC simply using the following code in Stata:
 
 To uninstall the package type:      
 
- .ado uninstall cvAUROC    
+ 		.ado uninstall cvAUROC      
 
 **note**: the github package only works with the latest versions of Stata >13.1, otherwise you can install manually the package directly downloading the files from the Github repository and placing it in your Stata ADO PERSONAL folder.    
 
