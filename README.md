@@ -3,8 +3,8 @@
 Receiver operating characteristic (ROC) analysis is used for comparing predictive models, both in model selection and model evaluation.
 This method is often applied in clinical medicine and social science to assess the tradeoff between model sensitivity and specificity. 
 After fitting a binary logistic regression model with a set of independent variables, the predictive performance of this set of variables 
-,as assessed by the area under the curve (AUC) from a ROC curve, must be estimated for a sample (the 'test' sample) that is independent 
-of the sample used to predict the dependent variable (the 'training' sample). An important aspect of predictive modeling (regardless of 
+,as assessed by the area under the curve (AUC) from a ROC curve, must be estimated for a sample (the "test" sample) that is independent 
+of the sample used to predict the dependent variable (the "training" sample). An important aspect of predictive modeling (regardless of 
 model type) is the ability of a model to generalize to new cases. Evaluating the predictive performance (AUC) of a set of independent 
 variables using all cases from the original analysis sample tends to result in an overly optimistic estimate of predictive performance. 
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
@@ -14,7 +14,8 @@ each fold and bootstrapping the cross-validated AUC to obtain statistical infere
 
 #Installation note    
 
-To install cvAUROC directly from github you need to use a Stata module for installing Stata packages from GitHub, including previous releases of a package. You can install the latest version of the github command by executing the following code in your Stata session:    
+To install cvAUROC directly from github you need to use a Stata module for installing Stata packages from GitHub, including previous releases
+of a package. You can install the latest version of the github command by executing the following code in your Stata session:    
 
     .net install github, from("https://haghish.github.io/github/")
 
@@ -28,7 +29,8 @@ To install cvAUROC directly from github you need to use a Stata module for insta
 	
     .ado uninstall cvAUROC  
 
-**note**: the github package only works with the latest versions of Stata >13.1, otherwise you can install manually the package directly downloading the files from the Github repository and placing it in your Stata ADO PERSONAL folder.  
+**note**: the github package only works with the latest versions of Stata >13.1, otherwise you can install manually the package directly
+downloading the files from the Github repository and placing it in your Stata ADO PERSONAL folder.  
 
 #Updates
 
