@@ -1,0 +1,16 @@
+d 'cvAUROC': Cross-validated Area Under the Curve
+d
+d KW: Version control
+d KW: GitHub
+d KW: Git
+d KW: net
+d
+d Requires: Stata version 14 
+d
+d Distribution-Date: 15.03.2017
+d
+d Author: Miguel Angel Luque-Fernandez LSHTM
+d Support: email miguel-angel.luque@lshtm.ac.uk
+d
+F cvAUROC.sthlp
+F cvAUROC.ado

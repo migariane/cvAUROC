@@ -1,0 +1,5 @@
+v 1.2
+d 'cvAUROC': Cross-validated Area Under the Curve  {break}
+d version (release) 
+d {browse "http://www.github.com/migariane/cvAUROC":GitHub} website
+p github
