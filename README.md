@@ -8,13 +8,13 @@ Receiver operating characteristic (ROC) analysis is used for comparing predictiv
 
 To install cvAUROC directly from github you need to use a Stata module for installing Stata packages from GitHub, including previous releases of a package. You can install the latest version of the github command by executing the following code in your Stata session:    
 
-.net install github, from("https://haghish.github.io/github/")  
+ net install github, from("https://haghish.github.io/github/")  
 
 then, you can install cvAUROC simply using the following code in Stata:   
 
-.github install migariane/cvAUROC  
-.which cvAUROC  
-.help cvAUROC  
+ github install migariane/cvAUROC  
+ which cvAUROC  
+ help cvAUROC  
 
 To uninstall the package type:      
 
