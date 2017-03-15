@@ -2,7 +2,7 @@
 
 program define cvAUROC
 	 set more off
-     syntax [varlist] [if] [ , KFOLD(numlist max=1) SEED(numlist max = 1) REPS(numlist max = 1)]
+     syntax [varlist] [if] [ , Kfold(numlist max=1) Seed(numlist max = 1) Reps(numlist max = 1)]
 	 local var `varlist'
 	 tokenize `var'
 	 local yvar = "`1'"		/*retain the y variable*/

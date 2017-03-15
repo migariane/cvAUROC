@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [{cmd:,} {hi: KFOLD SEED REPS}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [{cmd:,} {hi: kfold seed reps}]
 {p_end}
 
 
@@ -31,15 +31,15 @@ each fold and bootstrapping the cross-validated AUC to obtain statistical infere
 {title:Options}
 
 {p 4 4 2}
-{bf:KFOLD} This option allows the user to set the number of random folds to an integer greater than 1 (default = 10).
+{bf:Kfold} This option allows the user to set the number of random folds to an integer greater than 1 (default = 10).
 {p_end}
 
 {p 4 4 2}
-{bf:SEED}  This option allows the user to set the random seed to an integer greater than 1.  
+{bf:Seed}  This option allows the user to set the random seed to an integer greater than 1.
 {p_end}
 
 {p 4 4 2}
-{bf:REPS}  This option allows the user to set the number of bootstrap replications to an integer greater than 1 (default = 1000). 
+{bf:Reps}  This option allows the user to set the number of bootstrap replications to an integer greater than 1 (default = 1000).
 {p_end} 
 
 {title:Example}
