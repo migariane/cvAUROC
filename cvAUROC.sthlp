@@ -24,7 +24,7 @@ of the sample used to predict the dependent variable (the 'training' sample). An
 model type) is the ability of a model to generalize to new cases. Evaluating the predictive performance (AUC) of a set of independent 
 variables using all cases from the original analysis sample tends to result in an overly optimistic estimate of predictive performance. 
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
-in which the number of observations is not very large, [hi:cross-validation} and [hi:bootstrap} strategies are useful. {hi:cvAUROC} implements
+in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvAUROC} implements
 k-fold cross-validation for the AUC for a binary outcome after fitting a logistic regression model, averaging the AUCs corresponding to 
 each fold and bootstrapping the cross-validated AUC to obtain statistical inference.
 
