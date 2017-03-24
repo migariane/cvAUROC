@@ -1,6 +1,7 @@
-*! version 1.2.0 Cross-validated AUC by MA.LUQUE & C.MARINGE & P.NELSON 07.APRIL.2017
+*! version 1.3.0 Cross-validated AUC by MA.LUQUE & C.MARINGE & P.NELSON 07.APRIL.2017
 
 program define cvAUROC
+     version 10.1
 	 set more off
      syntax [varlist] [if] [ , Kfold(numlist max=1) Seed(numlist max = 1) Reps(numlist max = 1)]
 	 local var `varlist'
