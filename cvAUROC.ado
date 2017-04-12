@@ -1,4 +1,4 @@
-*! version 1.3.0 Cross-validated AUC by MA.LUQUE & C.MARINGE & P.NELSON 07.APRIL.2017
+*! version 1.4.0 Cross-validated AUC by MA.LUQUE & C.MARINGE & P.NELSON 12.APRIL.2017
 
 program define cvAUROC
      version 10.1
@@ -65,6 +65,7 @@ else {
 		exit 198
 	}
 }
+set seed `seed'
 xtile group = uniform(), nq(`kfold')
 
 *Step 3: fit the model for each of the k-fold training sets
