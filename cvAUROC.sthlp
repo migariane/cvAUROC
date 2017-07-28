@@ -1,5 +1,5 @@
 {smcl}
-{right:version 1.2.0}
+{right:version 1.6.0 28.JULY.2017}
 {title:}
 
 {phang}
@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed reps}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed detail}]
 {p_end}
 
 
@@ -25,8 +25,7 @@ model type) is the ability of a model to generalize to new cases. Evaluating the
 variables using all cases from the original analysis sample tends to result in an overly optimistic estimate of predictive performance. 
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
 in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvAUROC} implements
-k-fold cross-validation for the AUC for a binary outcome after fitting a logistic regression model, averaging the AUCs corresponding to 
-each fold and bootstrapping the cross-validated AUC to obtain statistical inference.
+k-fold cross-validation for the AUC for a binary outcome after fitting a logistic regression model.
 
 {title:Options}
 
@@ -36,10 +35,11 @@ each fold and bootstrapping the cross-validated AUC to obtain statistical infere
 
 {p 4 4 2}
 {bf:Seed}  This option allows the user to set the random seed to an integer greater than 1.
-{p_end}
+{p_end} 
 
 {p 4 4 2}
-{bf:Reps}  This option allows the user to set the number of bootstrap replications to an integer greater than 1 (default = 1000).
+{bf:Detail}  This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
+        correctly classified, and two likelihood ratios for each possible cutpoint of the fitted values.
 {p_end} 
 
 {title:Example}
@@ -49,129 +49,27 @@ each fold and bootstrapping the cross-validated AUC to obtain statistical infere
 
 . gen lbw = cond(bweight<2500,1,0.)
 
-. cvAUROC lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(12) reps(1000)
-(4,642 missing values generated)
+. cvAUROC lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(12) 
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-1-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           465     0.6892       0.0510        0.58930     0.78910
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-2-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.6859       0.0519        0.58430     0.78760
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-3-fold test AUC
+1-fold..............................
+2-fold..............................
+3-fold..............................
+4-fold..............................
+5-fold..............................
+6-fold..............................
+7-fold..............................
+8-fold..............................
+9-fold..............................
+10-fold..............................
 
                       ROC                    -Asymptotic Normal--
            Obs       Area     Std. Err.      [95% Conf. Interval]
      ------------------------------------------------------------
-           464     0.6379       0.0572        0.52584     0.75003
+         4,642     0.6820       0.0174        0.64782     0.71622
 
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-4-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.6044       0.0683        0.47049     0.73836
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-5-fold test AUC
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.7494       0.0661        0.61992     0.87885
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-6-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           465     0.7140       0.0535        0.60917     0.81888
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-7-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.6889       0.0404        0.60969     0.76808
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-8-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.6602       0.0494        0.56348     0.75701
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-9-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.7220       0.0612        0.60204     0.84190
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-10-fold test AUC
-
-                      ROC                    -Asymptotic Normal--
-           Obs       Area     Std. Err.      [95% Conf. Interval]
-     ------------------------------------------------------------
-           464     0.6936       0.0551        0.58557     0.80169
-
-++++++++++++++++++++++++++++++++++++++++++++++++++++++
-
-Cross-validated AUC:
-
-(running mean on estimation sample)
-
-Bootstrap replications (1000)
-----+--- 1 ---+--- 2 ---+--- 3 ---+--- 4 ---+--- 5 
-..................................................    50
-..................................................   100
-..................................................   150
-..................................................   200
-..................................................   250
-..................................................   300
-..................................................   350
-..................................................   400
-..................................................   450
-..................................................   500
-..................................................   550
-..................................................   600
-..................................................   650
-..................................................   700
-..................................................   750
-..................................................   800
-..................................................   850
-..................................................   900
-..................................................   950
-..................................................  1000
-
-Mean estimation                   Number of obs   =         10
-                                  Replications    =      1,000
-
---------------------------------------------------------------
-             |   Observed   Bootstrap         Normal-based
-             |       Mean   Std. Err.     [95% Conf. Interval]
--------------+------------------------------------------------
-         AUC |    .684565   .0127496      .6595763    .7095537
---------------------------------------------------------------
 
 *******************************************************
-//Naive performance based on non-crossvalidated AUC
+*  Naive performance based on non-crossvalidated AUC  *
 *******************************************************
 
 . logistic lbw mage medu mmarried prenatal fedu mbsmoke mrace order
@@ -244,5 +142,5 @@ Hastie T., Tibshirani R., Friedman J., (2013). The elements of Statistical Learn
 {title:Also see}
 
 {psee}
-Online:  {helpb CROSSFOLD} 
+Online:  {helpb crossfold} {helpb roctab}
 {p_end}

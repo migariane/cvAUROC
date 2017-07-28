@@ -5,9 +5,9 @@ d KW: GitHub
 d KW: Git
 d KW: net
 d
-d Requires: Stata version 14 
+d Requires: Stata version 11 
 d
-d Distribution-Date: 15.03.2017
+d Distribution-Date: 28.07.2017
 d
 d Author: Miguel Angel Luque-Fernandez LSHTM
 d Support: email miguel-angel.luque@lshtm.ac.uk
