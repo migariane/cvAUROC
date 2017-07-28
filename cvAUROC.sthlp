@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [{cmd:,} {hi: kfold seed reps}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed reps}]
 {p_end}
 
 
