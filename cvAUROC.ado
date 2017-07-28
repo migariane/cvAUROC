@@ -1,6 +1,6 @@
-*! version 1.5.0 Cross-validated AUC by MA.LUQUE & C.MARINGE & P.NELSON 28.JULY.2017
+*! version 1.5.0 Cross-validated AUC 28.JULY.2017
 *! cvAUROC: Stata module for cross-validated area under the curve (cvAUROC)
-*! by Miguel Angel Luque-Fernandez [cre,aut]
+*! by Miguel Angel Luque-Fernandez, Camille Maringe, Paul Nelson [cre,aut]
 *! Bug reports:
 *! miguel-angel.luque at lshtm.ac.uk
 
