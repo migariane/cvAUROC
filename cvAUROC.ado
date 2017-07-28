@@ -3,7 +3,7 @@
 program define cvAUROC
      version 10.1
 	 set more off
-     syntax [varlist] [if] [weight] [ , Kfold(numlist max=1) Seed(numlist max = 1) Reps(numlist max = 1)]
+     syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Reps(numlist max = 1)]
 	 local var `varlist'
 	 tokenize `var'
 	 local yvar = "`1'"		/*retain the y variable*/
