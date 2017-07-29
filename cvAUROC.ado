@@ -36,7 +36,7 @@ program define cvAUROC
          marksample touse
          quietly logistic `var'
          predict fitted, pr 
-		 
+		 drop fit
 *Step 1: Set Seed
 
 if "`setseed'"=="" {
