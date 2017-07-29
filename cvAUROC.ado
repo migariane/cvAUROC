@@ -34,7 +34,7 @@ program define cvAUROC
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
          marksample touse
-		 drop fit
+         capture drop fit
 *Step 1: Set Seed
 
 if "`setseed'"=="" {
