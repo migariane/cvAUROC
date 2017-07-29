@@ -107,7 +107,7 @@ display "`i'-fold.............................."
 
 egen fit = rowtotal(cv_fit*)
 replace fit = round(fit,.001)
-roctab `1' fit, `detail'
+roctab `1' fit, `detail' `graph'
 
 *Step 6: Optinal table displaying the sensitivity, specificity and roc curve
 
