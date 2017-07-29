@@ -34,8 +34,6 @@ program define cvAUROC
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
          marksample touse
-         quietly logistic `var'
-         predict fitted, pr 
 		 drop fit
 *Step 1: Set Seed
 
@@ -121,7 +119,6 @@ else {
 *Step 7: drop variables created by program xvalAUC
 
 drop cv* 
-drop fitted 
 drop group
 //drop fit
 end
