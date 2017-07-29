@@ -29,7 +29,7 @@ THE SOFTWARE.
 program define cvAUROC
          version 10.1
          set more off
-         syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Detail graph]
+         syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Detail Graph]
          local var `varlist'
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
@@ -122,7 +122,7 @@ if "`graph'"=="" {
                      local textgraph ""
 }
 else {
-		local detail "`graph'"
+		local graph "`graph'"
 		}
 
 
