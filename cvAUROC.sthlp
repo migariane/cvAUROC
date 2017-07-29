@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed detail}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed detail graph}]
 {p_end}
 
 
@@ -41,6 +41,10 @@ probabilities for the dependent variable or outcome, contained in a new variable
 {p 4 4 2}
 {bf:Detail}  This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
         correctly classified, and two likelihood ratios for each possible cutpoint of the fitted values.
+{p_end} 
+
+{p 4 4 2}
+{bf:Graph}   graph the ROC curve
 {p_end} 
 
 {title:Example}
