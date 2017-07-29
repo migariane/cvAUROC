@@ -29,12 +29,13 @@ THE SOFTWARE.
 program define cvAUROC
          version 10.1
          set more off
-         syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Detail]
+         syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Detail Roc]
          local var `varlist'
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
          marksample touse
          capture drop fit
+		 
 *Step 1: Set Seed
 
 if "`setseed'"=="" {
@@ -108,13 +109,22 @@ egen fit = rowtotal(cv_fit*)
 replace fit = round(fit,.001)
 roctab `1' fit, `detail'
 
-*Step 6: Optinal table displaying the sensitivity, specificity
+*Step 6: Optinal table displaying the sensitivity, specificity and roc curve
+
 if "`detail'"=="" {
                      local textdetail ""
 }
 else {
 		local detail "`detail'"
 		}
+		
+if "`roc'"=="" {
+                     local textroc ""
+}
+else {
+		local detail "`roc'"
+		}
+
 
 *Step 7: drop variables created by program xvalAUC
 
