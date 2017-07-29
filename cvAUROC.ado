@@ -123,5 +123,5 @@ else {
 drop cv* 
 drop fitted 
 drop group
-drop fit
+\\drop fit
 end
