@@ -39,12 +39,12 @@ probabilities for the dependent variable or outcome, contained in a new variable
 {p_end} 
 
 {p 4 4 2}
-{bf:Detail}  This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
-        correctly classified, and two likelihood ratios for each possible cutpoint of the fitted values.
+{bf:Detail} This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
+correctly classified, and two likelihood ratios for each possible cutpoint of the fitted values.
 {p_end} 
 
 {p 4 4 2}
-{bf:Graph}   graph the ROC curve
+{bf:Graph} This option allows the user to graph the ROC curve
 {p_end} 
 
 {title:Example}
