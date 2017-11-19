@@ -1,7 +1,7 @@
-*! version 1.6.0 Cross-validated AUC 28.JULY.2017
+*! version 1.6.1 Cross-validated Area Under the Curve 19.November.2017
 *! cvAUROC: Stata module for cross-validated area under the curve (cvAUROC)
 *! by Miguel Angel Luque-Fernandez, Camille Maringe, Paul Nelson [cre,aut]
-*! Bug reports:
+*! Bug reports: 
 *! miguel-angel.luque at lshtm.ac.uk
 
 /*
@@ -29,42 +29,19 @@ THE SOFTWARE.
 program define cvAUROC
          version 10.1
          set more off
-         syntax [varlist] [if] [pw] [ , Kfold(numlist max=1) Seed(numlist max = 1) Detail Graph]
+         syntax varlist(fv) [if] [pw] [, Kfold(numlist max=1) Seed(numlist max=1) Detail Graph]
          local var `varlist'
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
          marksample touse
-         capture drop fit
+         capture drop _fit
 		 
-*Step 1: Set Seed
+*Step 1: Set Seed by default for reproducibility
 
-if "`setseed'"=="" {
-                        local textsetseed ""
+if "`seed'"=="" {
+                        local seed 123
 }
 
-else {
-        local seedlist : word count `seed'
-        if `seedlist'!=1 {
-                di as error "seed must be a single number"
-                drop fitted
-                drop cv*
-                drop AUC 
-                drop group
-                exit 198
-        }
-        cap confirm integer num `seed'
-        if _rc>0 | `seed'<2{
-                di as error "seed must be an integer greater than 1"
-                drop fitted
-                drop cv*
-                drop AUC 
-                drop group
-                exit 198
-        }
-        else if `seedlist'==1 {
-                local textsetseed "set seed `seed'"
-        }
-}
 
 *Step 2: Divide data into `kfold' mutually exclusive subsets (default: 10)
 
@@ -89,25 +66,28 @@ else {
                 exit 198
         }
 }
+
 set seed `seed'
-xtile group = uniform(), nq(`kfold')
+xtile group = uniform() if `touse', nq(`kfold')
 
 *Step 3: fit the model for each of the k-fold training sets
 
 forvalues i = 1/`kfold' {
-qui: logistic `var' if group!=`i'
+qui: logistic `var' if group!=`i' & `touse'
 
 *Step 4: predict the outcome for each of the k-fold testing sets
 
-qui: predict cv_fit`i' if group==`i', pr
+qui: predict cv_fit`i' if group==`i' & `touse', pr
 display "`i'-fold.............................."
 }
 
+display "Random seed: `seed'" 
+
 *Step 5: calculate the  AUC using the predicted probabilities for each fold
 
-egen fit = rowtotal(cv_fit*)
-replace fit = round(fit,.001)
-roctab `1' fit, `detail' `graph'
+egen _fit = rowtotal(cv_fit*)
+replace _fit = round(_fit,.001)
+roctab `1' _fit if `touse', `detail' `graph'
 
 *Step 6: Optinal table displaying the sensitivity, specificity and roc curve
 
@@ -130,5 +110,5 @@ else {
 
 drop cv* 
 drop group
-//drop fit
+//drop _fit
 end

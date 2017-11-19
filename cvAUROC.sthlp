@@ -1,5 +1,5 @@
 {smcl}
-{right:version 1.6.0 28.JULY.2017}
+{right:version 1.6.1 19.November.2017}
 {title:}
 
 {phang}
@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [weight] [{cmd:,} {hi: kfold seed detail graph}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi: Detail Graph}]
 {p_end}
 
 
@@ -26,19 +26,22 @@ variables using all cases from the original analysis sample tends to result in a
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
 in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvAUROC} implements
 k-fold cross-validation for the AUC for a binary outcome after fitting a logistic regression model and provides the cross-validated fitted 
-probabilities for the dependent variable or outcome, contained in a new variable named {hi:fit}.
+probabilities for the dependent variable or outcome, contained in a new variable named {hi:_fit}.
 
 {title:Options}
+
+{p 4 4 2}
+{bf:pw} This option allows the user to include sampling weights (e.g. inverse-probability of censoring or treatment weights -IPCW or IPTW-).
 
 {p 4 4 2}
 {bf:Kfold} This option allows the user to set the number of random folds to an integer greater than 1 (default = 10).
 {p_end}
 
 {p 4 4 2}
-{bf:Seed}  This option allows the user to set the random seed to an integer greater than 1.
+{bf:Seed}  This option allows the user to set the random seed to an integer greater than 1 (default = 123).
 {p_end} 
 
-{p 4 4 2}
+{p 4 4 4}
 {bf:Detail} This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
 correctly classified, and two likelihood ratios for each possible cutpoint of the fitted values.
 {p_end} 
@@ -70,7 +73,7 @@ correctly classified, and two likelihood ratios for each possible cutpoint of th
                       ROC                    -Asymptotic Normal--
            Obs       Area     Std. Err.      [95% Conf. Interval]
      ------------------------------------------------------------
-         4,642     0.6820       0.0174        0.64782     0.71622
+         4,642     0.6826       0.0174        0.64842     0.71668
 
 
 *******************************************************
