@@ -1,4 +1,4 @@
-*! version 1.6.1 Cross-validated Area Under the Curve 19.November.2017
+*! version 1.6.1 Cross-validated Area Under the Curve ROC 19.November.2017
 *! cvAUROC: Stata module for cross-validated area under the curve (cvAUROC)
 *! by Miguel Angel Luque-Fernandez, Camille Maringe, Paul Nelson [cre,aut]
 *! Bug reports: 
@@ -19,7 +19,7 @@ all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+FITNESS FOR A PARTICULAR PURPOSE AND NON INFRINGEMENT. IN NO EVENT SHALL THE
 AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
@@ -39,7 +39,8 @@ program define cvAUROC
 *Step 1: Set Seed by default for reproducibility
 
 if "`seed'"=="" {
-                        local seed 123
+                        local rnd = round(runiform()*10000)
+						local seed `rnd'
 }
 
 
@@ -106,7 +107,7 @@ else {
 		}
 
 
-*Step 7: drop variables created by program xvalAUC
+*Step 7: drop variables created by program cvAUROC
 
 drop cv* 
 drop group

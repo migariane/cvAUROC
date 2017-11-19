@@ -34,7 +34,8 @@ probabilities for the dependent variable or outcome, contained in a new variable
 {bf:pw} This option allows the user to include sampling weights (e.g. inverse-probability of censoring or treatment weights -IPCW or IPTW-).
 
 {p 4 4 2}
-{bf:Kfold} This option allows the user to set the number of random folds to an integer greater than 1 (default = 10).
+{bf:Kfold} This option allows the user to set the number of random folds to an integer greater or equal than 0. 
+In case the random seed is not set for the user a random seed is automatically used and displayed in the output for replicability.
 {p_end}
 
 {p 4 4 2}
