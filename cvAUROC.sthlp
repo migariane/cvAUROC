@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi: Detail Graph}]
+{cmd: cvAUROC} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi:Cluster(varname) Detail Graph}]
 {p_end}
 
 
@@ -32,6 +32,8 @@ probabilities for the dependent variable or outcome, contained in a new variable
 
 {p 4 4 2}
 {bf:pw} This option allows the user to include sampling weights (e.g. inverse-probability of censoring or treatment weights -IPCW or IPTW-).
+{hi:Robust} standard errors are calculated automatically when sampling weights are specified.
+{p_end}
 
 {p 4 4 2}
 {bf:Kfold} This option allows the user to set the number of random folds to an integer greater or equal than 0. 
@@ -41,6 +43,10 @@ In case the random seed is not set for the user a random seed is automatically u
 {p 4 4 2}
 {bf:Seed}  This option allows the user to set the random seed to an integer greater than 1 (default = 123).
 {p_end} 
+
+{p 4 4 2}
+{bf:Cluster(varname)} This option allows the user to correct the standard error estimation for clustered data.
+{p_end}
 
 {p 4 4 4}
 {bf:Detail} This option allows the user to output a table displaying the sensitivity, specificity, the percentage of subjects
@@ -71,6 +77,7 @@ correctly classified, and two likelihood ratios for each possible cutpoint of th
 9-fold..............................
 10-fold..............................
 
+Random seed: 12
                       ROC                    -Asymptotic Normal--
            Obs       Area     Std. Err.      [95% Conf. Interval]
      ------------------------------------------------------------

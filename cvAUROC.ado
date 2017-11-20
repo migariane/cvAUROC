@@ -1,6 +1,7 @@
 *! version 1.6.1 Cross-validated Area Under the Curve ROC 19.November.2017
 *! cvAUROC: Stata module for cross-validated area under the curve (cvAUROC)
 *! by Miguel Angel Luque-Fernandez, Camille Maringe, Paul Nelson [cre,aut]
+*! Sampling weights, robust SE and cluster(var)
 *! Bug reports: 
 *! miguel-angel.luque at lshtm.ac.uk
 
@@ -29,13 +30,24 @@ THE SOFTWARE.
 program define cvAUROC
          version 10.1
          set more off
-         syntax varlist(fv) [if] [pw] [, Kfold(numlist max=1) Seed(numlist max=1) Detail Graph]
+         syntax varlist(fv) [if] [pw] [, /*
+		 */ Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Detail Graph]
          local var `varlist'
          tokenize `var'
          local yvar = "`1'"             /*retain the y variable*/
-         marksample touse
+         marksample touse, zeroweight
+		 markout `touse' `cluster', strok
+		 if "`weight'"!="" {
+			tempvar w
+			qui gen double `w' `exp' if `touse'
+			local pw "[pw=`w']"
+			capture assert `w' >= 0 if `touse'
+			if c(rc) error 402
+			}
+		 if "`cluster'"!="" {
+			local clopt "cluster(`cluster')"
+			}
          capture drop _fit
-		 
 *Step 1: Set Seed by default for reproducibility
 
 if "`seed'"=="" {
@@ -47,7 +59,7 @@ if "`seed'"=="" {
 *Step 2: Divide data into `kfold' mutually exclusive subsets (default: 10)
 
 if "`kfold'"=="" {
-                        local kfold 10
+                     local kfold 10
 }
 else {
         local kfoldlist : word count `kfold'
@@ -59,7 +71,7 @@ else {
                 exit 198
         }
         cap confirm integer num `kfold'
-        if _rc>0 | `kfold'<2{
+        if _rc>0 | `kfold'<2 {
                 di as error "k-fold must be an integer greater than 1"
                 drop fitted
                 drop AUC 
@@ -74,12 +86,10 @@ xtile group = uniform() if `touse', nq(`kfold')
 *Step 3: fit the model for each of the k-fold training sets
 
 forvalues i = 1/`kfold' {
-qui: logistic `var' if group!=`i' & `touse'
-
+	qui: logistic `var' `pw' if group!=`i' & `touse', `clopt'
 *Step 4: predict the outcome for each of the k-fold testing sets
-
-qui: predict cv_fit`i' if group==`i' & `touse', pr
-display "`i'-fold.............................."
+    qui: predict cv_fit`i' if group==`i' & `touse', pr
+    display "`i'-fold.............................."	 
 }
 
 display "Random seed: `seed'" 
