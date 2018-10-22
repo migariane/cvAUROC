@@ -1,5 +1,5 @@
 {smcl}
-{right:version 1.6.1 19.November.2017}
+{right:version 1.6.2 22.October.2018}
 {title:}
 
 {phang}
