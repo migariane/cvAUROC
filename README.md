@@ -32,7 +32,7 @@ Twitter @WATZILEI
 # Citation
 
 You can cite this repository as:  
-Luque-Fernandez MA, Rodondo-Sanchez D, Maringe C. (2017). Cross-validated Area Under the Curve. GitHub repository, https://github.com/migariane/cvauroc      
+Luque-Fernandez MA,  Redondo-Sanchez D, Maringe C. (2018). Cross-validated Area Under the Curve. GitHub repository, https://github.com/migariane/cvauroc      
 
 # Copyright
 
