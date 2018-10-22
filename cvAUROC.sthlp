@@ -3,13 +3,13 @@
 {title:}
 
 {phang}
-{cmd:cvAUROC} {hline 2} Cross-validated Area Under the Curve for ROC Analysis after Predictive Modelling for Binary Outcomes 
+{cmd:cvauroc} {hline 2} Cross-validated Area Under the Curve for ROC Analysis after Predictive Modelling for Binary Outcomes 
  
 
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvAUROC} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi:Cluster(varname) Detail Graph}]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi:Cluster(varname) Detail Graph}]
 {p_end}
 
 
@@ -24,7 +24,7 @@ of the sample used to predict the dependent variable (the 'training' sample). An
 model type) is the ability of a model to generalize to new cases. Evaluating the predictive performance (AUC) of a set of independent 
 variables using all cases from the original analysis sample tends to result in an overly optimistic estimate of predictive performance. 
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
-in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvAUROC} implements
+in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvauroc} implements
 k-fold cross-validation for the AUC for a binary outcome after fitting a logistic regression model and provides the cross-validated fitted 
 probabilities for the dependent variable or outcome, contained in a new variable named {hi:_fit}.
 
@@ -64,7 +64,7 @@ correctly classified, and two likelihood ratios for each possible cutpoint of th
 
 . gen lbw = cond(bweight<2500,1,0.)
 
-. cvAUROC lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(12) 
+. cvauroc lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(12) 
 
 1-fold..............................
 2-fold..............................

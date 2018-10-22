@@ -1,5 +1,5 @@
-*! version 1.6.1 Cross-validated Area Under the Curve ROC 19.November.2017
-*! cvAUROC: Stata module for cross-validated area under the curve (cvAUROC)
+*! version 1.6.2 Cross-validated Area Under the Curve ROC 22.October.2018
+*! cvauroc: Stata module for cross-validated area under the curve (cvauroc)
 *! by Miguel Angel Luque-Fernandez, Camille Maringe, Paul Nelson [cre,aut]
 *! Sampling weights, robust SE and cluster(var)
 *! Bug reports: 
@@ -27,7 +27,7 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-program define cvAUROC
+program define cvauroc
          version 10.1
          set more off
          syntax varlist(fv) [if] [pw] [, /*
@@ -117,7 +117,7 @@ else {
 		}
 
 
-*Step 7: drop variables created by program cvAUROC
+*Step 7: drop variables created by program cvauroc
 
 drop cv* 
 drop group
