@@ -1,5 +1,5 @@
 {smcl}
-{right:version 1.6.2 22.October.2018}
+{right:version 1.6.3   December 15th, 2018}
 {title:}
 
 {phang}
@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvauroc} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi:Cluster(varname) Detail Graph}]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [Kfold] [Seed] [{cmd:,} {hi:Cluster(varname) Detail Graph Probit}]
 {p_end}
 
 
@@ -54,7 +54,11 @@ correctly classified, and two likelihood ratios for each possible cutpoint of th
 {p_end} 
 
 {p 4 4 2}
-{bf:Graph} This option allows the user to graph the ROC curve
+{bf:Graph} This option allows the user to graph the ROC curve.
+{p_end} 
+
+{p 4 4 2}
+{bf:Probit} cvauroc fit a logit model by default. This option allows the user to fit a probit model.
 {p_end} 
 
 {title:Example}
@@ -129,17 +133,6 @@ Email: miguel-angel.luque@lshtm.ac.uk   {break}
 Camille Maringe   {break}
 LSHTM, NCDE, Cancer Survival Group, London, UK   {break}
 Email: camille.maringe at lshtm.ac.uk  {break}
-
-{p 4 4 2}
-Paul Nelson  {break}
-Bureau of Crime Statistics and Research | NSW Department of Justice   {break}
-Email: paul.nelson at justice.nsw.gov.au  {break}
-
-{title:Acknowledgements}
-
-{p 4 4 2}
-We would like to thank Professor Bernard Rachet (LSHTM) for his comments and support, Dr Timothy Graham (ANU) for his helpful advice and ideas and Haghish E. F. (CMBMI, Freiburg, Germany) for his 
-wonderful Github and MarkDoc Stata packages.
 
 {title:References}
 
