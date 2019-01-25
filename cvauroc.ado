@@ -141,9 +141,9 @@ else {
 		local graph "`graph'"	
 		
 	quietly {
-			
+	
 			forvalues i = 1/`kfold' {
-	        qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt' 
+	        qui: `pro' `var' /*`pw'*/ if `fold'!=`i' & `touse', `clopt' 
 		    qui: lsens if `fold'==`i' & `touse', gensens(sens`i') genspec(spec`i') nograph
 			replace spec`i' = 1 - spec`i'
 			local g = "`g'" + " lowess  sens`i' spec`i', sort lpattern(dash)|| "
@@ -152,7 +152,7 @@ else {
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `1' _fit `pw' if `touse', `clopt' 
+	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
 			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
 			replace `_spe' = 1 - `_spe'
 			
@@ -171,12 +171,12 @@ else {
 			
 * Optional crossvalidated fitted values in var _fit	_sen and _spe
 
-if "`sen'"!=""| "`spe'"!=""{
+if "`sen'"!="" | "`spe'"!=""{
       local sen "`sen'"
       local spe "`spe'"
      
       quietly{
-      `pro' `1' _fit `pw' if `touse', `clopt'
+      `pro' `1' _fit /*`pw'*/ if `touse', `clopt'
       lsens, gensens(_sen) genspec(_spe) nograph
       replace _spe = (1 - _spe)
  
@@ -194,15 +194,13 @@ if "`sen'"!=""| "`spe'"!=""{
       }
  
 if "`sen'"==""{
-        local textsen ""
-            drop _sen
+			local textsen ""
       }
       else{
             display "cv(sen):" %7.4f b[1,1] ";"  "  95%CI:" "(" %5.4f b[5,1] "," %7.4f b[6,1] ")"
       }
 if "`spe'"=="" {
             local textspe ""
-            drop _spe
       }
       else{
             display "cv(spe):" %7.4f c[1,1] ";"  "  95%CI:" "(" %5.4f c[5,1] "," %7.4f c[6,1] ")"
