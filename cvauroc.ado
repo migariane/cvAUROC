@@ -27,8 +27,8 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 */
 
-capture program drop cvauroc6
-program define cvauroc6
+capture program drop cvauroc
+program define cvauroc
          version 10.1
          set more off
          syntax varlist(fv) [if] [pw] [, /*
