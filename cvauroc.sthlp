@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold Seed Probit Graph Fit Se Sp]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold Seed Probit Graph Fit Sen Spe]
 {p_end}
 
 
@@ -57,11 +57,11 @@ in three new variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}.
 {p_end} 
 
 {p 4 4 2}
-{bf:Se} This option allows the user to generate a new variable (_Sen) containing the cross-validated sensitivity and 95%CI for the independent variable or predictor.
+{bf:Sen} This option allows the user to generate a new variable (_Sen) containing the cross-validated sensitivity and 95%CI for the independent variable or predictor.
 {p_end} 
 
 {p 4 4 2}
-{bf:Sp} This option allows the user to generate a new variable (_Spe) containing the cross-validated specificity and 95%CI for the independent variable or predictor.
+{bf:Spe} This option allows the user to generate a new variable (_Spe) containing the cross-validated specificity and 95%CI for the independent variable or predictor.
 
 {title:Example}
 
@@ -147,7 +147,7 @@ Email: camille.maringe at lshtm.ac.uk  {break}
 {p 4 4 2}
 Daniel Redondo-Sanchez  {break}
 Biomedical Research Institute of Granada (ibs.Granada)   {break}
-Email: daniel.rodondo.easp at juntadeandalucia.es  {break}
+Email: daniel.redondo.easp at juntadeandalucia.es  {break}
 
 {title:Acknowledgements}
 

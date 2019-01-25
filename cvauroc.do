@@ -171,38 +171,43 @@ else {
 			
 * Optional crossvalidated fitted values in var _fit	_sen and _spe
 
+if "`sen'"!=""| "`spe'"!=""{
+      local sen "`sen'"
+      local spe "`spe'"
+     
+      quietly{
+      `pro' `1' _fit `pw' if `touse', `clopt'
+      lsens, gensens(_sen) genspec(_spe) nograph
+      replace _spe = (1 - _spe)
+ 
+      mean _sen
+      mat b = r(table)
+     
+      mean _spe
+      mat c = r(table)
+      }
+     
+      display ""
+      display "Cross-validated Sensitivity, Specificity, and 95%CI"
+      display "___________________________________________________"
+      display ""
+      }
+ 
 if "`sen'"==""{
         local textsen ""
-		drop _sen
-	}
-if "`spe'"=="" { 
-		local textspe ""
-		drop _spe
-}
-else  {
-    local sen "`sen'"
-	local spe "`spe'"
-	
-	quietly{
-	`pro' `1' _fit `pw' if `touse', `clopt' 
-	lsens, gensens(_sen) genspec(_spe) nograph
-	replace _spe = (1 - _spe)
-
-	mean _sen
-	mat b = r(table) 
-	
-	mean _spe
-	mat c = r(table) 
-	}
-	
-	display ""
-	display "Cross-validated Sensitivity, Specificity and 95%CI"
-	display "___________________________________________________"
-	display ""
-	display "cv(sen):" %7.4f b[1,1] ";"  "  95%CI:" "(" %5.4f b[5,1] "," %7.4f b[6,1] ")"
-	display "cv(spe):" %7.4f c[1,1] ";"  "  95%CI:" "(" %5.4f c[5,1] "," %7.4f c[6,1] ")"
-	display ""
-}
+            drop _sen
+      }
+      else{
+            display "cv(sen):" %7.4f b[1,1] ";"  "  95%CI:" "(" %5.4f b[5,1] "," %7.4f b[6,1] ")"
+      }
+if "`spe'"=="" {
+            local textspe ""
+            drop _spe
+      }
+      else{
+            display "cv(spe):" %7.4f c[1,1] ";"  "  95%CI:" "(" %5.4f c[5,1] "," %7.4f c[6,1] ")"
+      }
+ 
 if "`fit'"=="" { 
 	local textfit ""
 	drop _fit
@@ -212,3 +217,7 @@ else  {
 	}
 	
 end
+
+
+
+
