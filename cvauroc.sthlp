@@ -26,9 +26,9 @@ variables using all cases from the original analysis sample tends to result in a
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
 in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvauroc} implements
 k-fold cross-validation for the AUC for a binary outcome after fitting a logit or probit regression model, averaging the AUCs corresponding to 
-each fold and bootstrapping the cross-validated AUC to obtain statistical inference. Furthermore, {hi:cvauroc} provides the cross-validated fitted 
-probabilities for the dependent variable or outcome, and the sensitivity and specificity with their respective 95% confidence intervals, contained
-in three new variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}. 
+each fold and bootstrapping the cross-validated AUC to obtain statistical inference and 95% confidence intervals (CI). Furthermore, {hi:cvauroc} provides the cross-validated fitted 
+probabilities for the dependent variable or outcome, and the sensitivity and specificity with their respective 95% CI, contained in three new 
+variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}. 
 
 {title:Options}
 
