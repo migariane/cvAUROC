@@ -86,7 +86,7 @@ variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}.
 Model: probit
 Seed: 1972
 
-Cross-validated (cv) mean AUC, SD and Bootstraped Corrected 95%CI:
+Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI:
 ___________________________________________________________________
 
 cvMean AUC: 0.6857;  95%CI:(0.6403, 0.7097);  cvSD AUC: 0.0578

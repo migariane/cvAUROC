@@ -87,7 +87,7 @@ else {
         }
 }
 		
-*Step 4: mean and SD for the cross-validated AUC and bootstraped corrected 95% CI
+*Step 4: mean and SD for the cross-validated AUC and bootstrap corrected 95% CI
 
 	sort `varlist'
 	set seed `seed'
@@ -127,7 +127,7 @@ else {
     display "Seed: `seed'" 
 	display ""
 	
-    display "Cross-validated (cv) mean AUC, SD and Bootstraped Corrected 95%CI:" 
+    display "Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI:" 
 	display "___________________________________________________________________"
 	display ""
 	display "cvMean AUC:" %7.4f `mauc' ";  95%CI:" "("%5.4f a[1,1] "," %7.4f a[2,1] ")"";  cvSD AUC:" %7.4f `sauc' 
@@ -169,7 +169,7 @@ else {
 		}	
 }
 			
-* Optional crossvalidated fitted values in var _fit	_sen and _spe
+* Optional cross-validated fitted values in var _fit _sen and _spe
 
 if "`sen'"!="" | "`spe'"!=""{
       local sen "`sen'"
