@@ -28,14 +28,16 @@ THE SOFTWARE.
 */
 
 capture program drop cvauroc
-program define cvauroc
+program define cvauroc, eclass
          version 10.1
          set more off
-         syntax varlist(fv) [if] [in] [pw] [, Detail /*
-		 */ Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Detail Graph Probit Fit Sen Spe]
-         local var `varlist'
+         syntax varlist(numeric ts fv) [if] [in] [pw] [, /*
+		 */ Detail Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Graph Probit Fit Sen Spe] 
+         gettoken depvar : varlist
+         _fv_check_depvar `depvar'
+		 /*local var `varlist'
          tokenize `var'
-         local yvar = "`1'"  /*retain the y variable*/
+         local yvar = "`1'"  /*retain the y variable*/ */
          marksample touse, zeroweight
 		 markout `touse' `cluster', strok
 		 if "`weight'"!="" {
@@ -97,9 +99,9 @@ else {
 	forvalues i = 1/`kfold' {
 	qui: count if `fold'==`i' & `touse'
 	local nb = r(N)
-	qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt'
+	qui: `pro' `varlist' `pw' if `fold'!=`i' & `touse', `clopt' 
 	*predict the outcome for each of the k-fold testing sets,
-        qui: predict fitt`i' if `fold'==`i' & `touse', pr
+    qui: predict fitt`i' if `fold'==`i' & `touse', pr
 	qui: roctab `1' fitt`i' if `touse'
 	gen auc`i' = `r(area)'
 	display "`i'-fold (N=" `nb' ").........AUC =" %7.3f `r(area)'
@@ -143,7 +145,7 @@ else {
 	quietly {
 	
 			forvalues i = 1/`kfold' {
-	        qui: `pro' `var' /*`pw'*/ if `fold'!=`i' & `touse', `clopt' 
+	        qui: `pro' `varlist' /*`pw'*/ if `fold'!=`i' & `touse', `clopt' 
 		    qui: lsens if `fold'==`i' & `touse', gensens(sens`i') genspec(spec`i') nograph
 			replace spec`i' = 1 - spec`i'
 			local g = "`g'" + " lowess  sens`i' spec`i', sort lpattern(dash)|| "
@@ -152,7 +154,7 @@ else {
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
+	        qui: `pro' `depvar' _fit /*`pw'*/ if `touse', `clopt' 
 			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
 			replace `_spe' = 1 - `_spe'
 			
@@ -176,7 +178,7 @@ if "`sen'"!="" | "`spe'"!=""{
       local spe "`spe'"
      
       quietly{
-      `pro' `1' _fit /*`pw'*/ if `touse', `clopt'
+      `pro' `depvar' _fit /*`pw'*/ if `touse', `clopt'
       lsens, gensens(_sen) genspec(_spe) nograph
       replace _spe = (1 - _spe)
  
