@@ -1,4 +1,4 @@
-D*! version 1.6.5 Cross-validated Area Under the Curve ROC 24.January.2019
+*! version 1.6.5 Cross-validated Area Under the Curve ROC 24.January.2019
 *! cvauroc: Stata module for cross-validated area under the curve (cvauroc)
 *! by Miguel Angel Luque-Fernandez, Daniel Redondo, Camille Maringe [cre,aut]
 *! Sampling weights, robust SE, cluster(var), probit and logit models
