@@ -35,6 +35,10 @@ Twitter @WATZILEI
 You can cite this repository as:  
 Luque-Fernandez MA,  Redondo-Sanchez D, Maringe C. (2019). Cross-validated Area Under the Curve. GitHub repository, https://github.com/migariane/cvauroc      
 
+
+[![DOI](https://zenodo.org/badge/84948386.svg)](https://zenodo.org/badge/latestdoi/84948386)
+
+
 # Copyright
 
 This software is distributed under the GPL-2 license.  
