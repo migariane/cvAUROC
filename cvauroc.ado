@@ -158,8 +158,8 @@ else {
 			qui: twoway line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
 			`g' line `_sen' `_spe', sort lcolor(red) lwidth(thick) ||, ///
 			saving(cvROC, replace) graphregion(fcolor(white)) ///
-			title("cvAUC and Folds ROC curves", color(black)) ///
-			caption("Overall cvAUC (solid red curve) and folds ROC curve (dashed curves --)", size(small)) ///
+			title("cvAUC and k-fold ROC curves", color(black)) ///
+			caption("Overall cvAUC (solid red curve) and k-fold ROC curves (dashed curves --)", size(small)) ///
 			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
 			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
 			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") legend(off)
@@ -184,8 +184,8 @@ else {
 			qui: twoway `gl' lowess `_sen' `_spe', sort lcolor(red) lwidth(thick) || ///
 			line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
 			, saving(cvROC, replace) graphregion(fcolor(white)) legend(off) ///
-			title("cvAUC and Folds ROC curves", color(black)) ///
-			caption("Overall cvAUC (solid red curve) and folds ROC curve (dashed curves --)", size(small)) ///
+			title("cvAUC and k-fold ROC curves", color(black)) ///
+			caption("Overall cvAUC (solid red curve) and k-fold ROC curves (dashed curves --)", size(small)) ///
 			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
 			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
 			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") 
