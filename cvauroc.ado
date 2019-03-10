@@ -103,12 +103,6 @@ else {
 	qui: count if `fold'==`i' & `touse'
 	local nb = r(N)
 	qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt'
-	//if error  {
-	//	exit 198
-	 //}
-	else{
-		qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt'
-	}
 	return local model = e(cmd)
 
 	*predict the outcome for each of the k-fold testing sets,
