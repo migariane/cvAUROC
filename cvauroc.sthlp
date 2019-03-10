@@ -1,5 +1,5 @@
 {smcl}
-{right:version 1.6.5 24.January.2019}
+{right:version 1.6.6 14.March.2019}
 {title:}
 
 {phang}
@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Graph Fit Sen Spe]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Fit Graph Graphlowess Detail ]
 {p_end}
 
 
@@ -24,11 +24,12 @@ of the sample used to predict the dependent variable (the 'training' sample). An
 model type) is the ability of a model to generalize to new cases. Evaluating the predictive performance (AUC) of a set of independent 
 variables using all cases from the original analysis sample tends to result in an overly optimistic estimate of predictive performance. 
 K-fold cross-validation can be used to generate a more realistic estimate of predictive performance. To assess this ability in situations 
-in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvauroc} implements
-k-fold cross-validation for the AUC for a binary outcome after fitting a logit or probit regression model, averaging the AUCs corresponding to 
-each fold and bootstrapping the cross-validated AUC to obtain statistical inference and 95% confidence intervals (CI). Furthermore, {hi:cvauroc} provides the cross-validated fitted 
-probabilities for the dependent variable or outcome, and the sensitivity and specificity with their respective 95% CI, contained in three new 
-variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}. 
+in which the number of observations is not very large, {hi:cross-validation} and {hi:bootstrap} strategies are useful. {hi:cvauroc} is a 
+Stata rclass program that implements k-fold cross-validation for the AUC for a binary outcome after fitting a logit or probit regression model.
+{hi:cvauroc} averages the AUCs corresponding to each fold and applies the bootstrap procedure to the cross-validated AUC to obtain statistical 
+inference and 95% bias corrected confidence intervals (CI). Furthermore, {hi:cvauroc} provides the cross-validated fitted probabilities for
+the dependent variable or outcome contianed in a new variable named {hi:_fit}, and optionally the sensitivity and specificity, contained 
+in two new variables named, {hi:_sen} and {hi:_spe}. 
 
 {title:Options}
 
@@ -53,15 +54,18 @@ variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}.
 {p_end} 
 
 {p 4 4 2}
+{bf:Graphlowess} This option allows the user to graph a smoothed version of the cross-validated ROC curve and the ROC curves for the respective k folds specified by the user.
+{p_end} 
+
+{p 4 4 2}
 {bf:Fit} This option allows the user to generate a new variable (_fit) containing the cross-validated probabilities for the dependent variable or outcome.
 {p_end} 
 
 {p 4 4 2}
-{bf:Sen} This option allows the user to generate a new variable (_Sen) containing the cross-validated sensitivity and 95%CI for the independent variable or predictor.
+{bf:Detail} This option allows the user to display in a tabulation the prevalence of the independent variable or predictor, the sensitivity, specificity and false positive reates by each level of the outcome fitted probabilities.
+Furthermore, it creates two new variables containing the cross-validated sensitivity (_Sen) and specificity (_Spe) for the independent variable or predictor.
 {p_end} 
 
-{p 4 4 2}
-{bf:Spe} This option allows the user to generate a new variable (_Spe) containing the cross-validated specificity and 95%CI for the independent variable or predictor.
 
 {title:Example}
 
@@ -70,7 +74,7 @@ variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}.
 
 . gen lbw = cond(bweight<2500,1,0.)
 
-. cvauroc lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(1972) probit fit sen spe 
+. cvauroc lbw mage medu mmarried prenatal fedu mbsmoke mrace order, kfold(10) seed(1972) probit fit det 
 
 1-fold (N=465).........AUC =  0.726
 2-fold (N=464).........AUC =  0.752
@@ -81,22 +85,39 @@ variables named {hi:_fit}, {hi:_sen}, and {hi:_spe}.
 7-fold (N=464).........AUC =  0.579
 8-fold (N=464).........AUC =  0.641
 9-fold (N=464).........AUC =  0.730
-10-fold (N=464)........AUC =  0.704
+10-fold(N=464).........AUC =  0.704
 
-Model: probit
-Seed: 1972
+Model:probit
 
-Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI:
-___________________________________________________________________
+Seed:1972
 
-cvMean AUC: 0.6857;  95%CI:(0.6403, 0.7097);  cvSD AUC: 0.0578
+----------------------------------------------------------------
+Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI
+----------------------------------------------------------------
+cvMean AUC:                 | 0.6857
+Booststrap corrected 95%CI: | 0.6391, 0.7078
+cvSD AUC:                   | 0.0578
+----------------------------------------------------------------
 
-Cross-validated Sensitivity, Specificity and 95%CI
-___________________________________________________
+------------------------------------------------------------------
+Mean cross-validated Sen, Spe and false(+) at lbw predicted values
+------------------------------------------------------------------
 
-cv(sen): 0.6493;  95%CI:(0.6413, 0.6574)
-cv(spe): 0.4749;  95%CI:(0.4656, 0.4841)
+Prevalence of lbw: 6.01%
+------------------------
 
+_Pred_Prob |      _sen      _spe       _fp
+-----------+------------------------------
+         0 |    100.00      0.00    100.00
+       .03 |     99.04      2.34     97.66
+       .04 |     82.77     31.83     68.17
+       .05 |     64.56     65.52     34.48
+       .06 |     54.80     74.01     25.99
+	   
+(output omitted ...)
+
+         1 |      0.00    100.00      0.00
+------------------------------------------
 
 *******************************************************
 *  Naive performance based on non-crossvalidated AUC  *

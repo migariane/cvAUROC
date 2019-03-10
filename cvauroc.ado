@@ -1,4 +1,4 @@
-*! version 1.6.5 Cross-validated Area Under the Curve ROC 24.January.2019
+*! version 1.6.6 Cross-validated Area Under the Curve ROC 14.March.2019
 *! cvauroc: Stata module for cross-validated area under the curve (cvauroc)
 *! by Miguel Angel Luque-Fernandez, Daniel Redondo, Camille Maringe [cre,aut]
 *! Sampling weights, robust SE, cluster(var), probit and logit models
@@ -28,16 +28,14 @@ THE SOFTWARE.
 */
 
 capture program drop cvauroc
-program define cvauroc, eclass
+program define cvauroc, rclass
          version 10.1
          set more off
-         syntax varlist(numeric ts fv) [if] [in] [pw] [, /*
-		 */ Detail Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Graph Probit Fit Sen Spe] 
-         gettoken depvar : varlist
-         _fv_check_depvar `depvar'
-		 /*local var `varlist'
+         syntax varlist(fv) [if] [pw] [, /*
+		 */ Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Detail Probit Fit Graph Graphlowess]
+         local var `varlist'
          tokenize `var'
-         local yvar = "`1'"  /*retain the y variable*/ */
+         local yvar = "`1'"  /*retain the y variable*/
          marksample touse, zeroweight
 		 markout `touse' `cluster', strok
 		 if "`weight'"!="" {
@@ -50,9 +48,12 @@ program define cvauroc, eclass
 		 if "`cluster'"!="" {
 			local clopt "cluster(`cluster')"
 			}
-		 capture drop _fit 
+		 capture drop _fit
+		 capture drop _fitt*
 		 capture drop _sen
 		 capture drop _spe
+		 capture drop _sens* 
+		 capture drop _spec*
 		 set more off
 		 
 *Step 1: Set Seed for reproducibility (default: 7777)
@@ -67,10 +68,11 @@ if "`seed'"=="" {
 if "`probit'" == "" {
 	local pro "logistic" 
 	}
+	
 else { 
 	local pro "probit" 
 	}
-
+	
 *Step 3: Divide data into `kfold' mutually exclusive subsets (default: 10)
 
 if "`kfold'"=="" {
@@ -94,126 +96,159 @@ else {
 	sort `varlist'
 	set seed `seed'
 	tempvar fold
+	return scalar Nfolds = `kfold'
 	xtile `fold' = uniform() if `touse', nq(`kfold')
 	
 	forvalues i = 1/`kfold' {
 	qui: count if `fold'==`i' & `touse'
 	local nb = r(N)
-	qui: `pro' `varlist' `pw' if `fold'!=`i' & `touse', `clopt' 
-	*predict the outcome for each of the k-fold testing sets,
-    qui: predict fitt`i' if `fold'==`i' & `touse', pr
-	qui: roctab `1' fitt`i' if `touse'
-	gen auc`i' = `r(area)'
-	display "`i'-fold (N=" `nb' ").........AUC =" %7.3f `r(area)'
+	qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt'
+	//if error  {
+	//	exit 198
+	 //}
+	else{
+		qui: `pro' `var' `pw' if `fold'!=`i' & `touse', `clopt'
 	}
+	return local model = e(cmd)
 
-	egen _fit = rowtotal(fitt*)
-	drop fitt*
+	*predict the outcome for each of the k-fold testing sets,
+    qui: predict _fitt`i' if `fold'==`i' & `touse', pr
+	qui: roctab `1' _fitt`i' 
+	matrix f  =  (nullmat(f) \ r(area))
+	disp as text "`i'-fold (N=" `nb' ").........AUC =" %7.3f as result `r(area)' 
 	
-	egen mauc = rowmean(auc*)
-	qui: summ(mauc)
-	local mauc =  `r(mean)'
+	*Step 5: plot the overall cross-validated ROC and the ROC curve for each fold 
 	
-	egen sauc = rowsd(auc*)
-	qui: summ(sauc)
-	local sauc =  `r(mean)'
+	qui: `pro' `var' /*`pw'*/ if `fold'!=`i' & `touse', `clopt' 
+	qui: lsens if `fold'==`i' & `touse', gensens(_sens`i') genspec(_spec`i') nograph
+	qui: replace _spec`i' = 1 - _spec`i'
+	local g = "`g'" + " line _sens`i' _spec`i', sort lpattern(dash)||" 
+	local gl = "`gl'" + " lowess _sens`i' _spec`i', sort lpattern(dash)||" 
+	}
 	
-	drop mauc sauc auc* 
+	qui: egen _fit = rowtotal(_fitt*)
+    drop _fitt*
 	
-	qui: rocreg `1' _fit if `touse'
-    matrix a = e(ci_bc)
-	drop _roc__fit _fpr__fit
+	tempvar auc
+    svmat f, name(`auc')
+	qui: sum `auc'
+	return scalar mean_auc =  `r(mean)'
+	return scalar sd_auc =  `r(sd)'
+	mat drop f
 	
-	display ""
-    display "Model: `pro'"
-    display "Seed: `seed'" 
-	display ""
+	if "`graph'"=="" {
 	
-    display "Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI:" 
-	display "___________________________________________________________________"
-	display ""
-	display "cvMean AUC:" %7.4f `mauc' ";  95%CI:" "("%5.4f a[1,1] "," %7.4f a[2,1] ")"";  cvSD AUC:" %7.4f `sauc' 
-		
-*Step 5: plot the overall cross-validated ROC and the ROC curve for each fold 
-		
-if "`graph'"=="" {
         local textgraph ""
 	}
-else {
-		local graph "`graph'"	
-		
-	quietly {
 	
-			forvalues i = 1/`kfold' {
-	        qui: `pro' `varlist' /*`pw'*/ if `fold'!=`i' & `touse', `clopt' 
-		    qui: lsens if `fold'==`i' & `touse', gensens(sens`i') genspec(spec`i') nograph
-			replace spec`i' = 1 - spec`i'
-			local g = "`g'" + " lowess  sens`i' spec`i', sort lpattern(dash)|| "
+	else {
+		
+		local graph "`graph'"	
+	
+			tempvar _sen
+			tempvar _spe
+			
+	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
+			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
+			qui: replace `_spe' = 1 - `_spe'
+
+	        local mauc = string(round(return(mean_auc),0.001)) 
+			local sauc = string(round(return(sd_auc),0.001))
+			
+			qui: twoway line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
+			`g' line `_sen' `_spe', sort lcolor(red) lwidth(thick) ||, ///
+			saving(cvROC, replace) graphregion(fcolor(white)) ///
+			title("cvAUC and Folds ROC curves", color(black)) ///
+			caption("Overall cvAUC (solid red curve) and folds ROC curve (dashed curves --)", size(small)) ///
+			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
+			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
+			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") legend(off)
+	}	
+	
+	if "`graphlowess'"=="" {
+			local textgraphlowess ""
 			}
+	else {
+			local lowess "`graphlowess'"	
 			
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `depvar' _fit /*`pw'*/ if `touse', `clopt' 
+	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
 			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
-			replace `_spe' = 1 - `_spe'
+			qui: replace `_spe' = 1 - `_spe'
 			
-	        local mauc = string(round(`mauc',0.001)) 
-			local sauc = string(round(`sauc',0.001))
+	        local mauc = string(round(return(mean_auc),0.001)) 
+			local sauc = string(round(return(sd_auc),0.001))
 			
-			twoway `g' lowess `_sen' `_spe', sort lcolor(red) lwidth(thick) || ///
-			line sens1 sens1, sort lcolor(black) lwidth(medthick) || ///
-			, title("Overall cvAUC (red) and Folds ROC curves (dash)") saving(cvROC, replace) graphregion(fcolor(white)) legend(off) ///
+			qui: twoway `gl' lowess `_sen' `_spe', sort lcolor(red) lwidth(thick) || ///
+			line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
+			, saving(cvROC, replace) graphregion(fcolor(white)) legend(off) ///
+			title("cvAUC and Folds ROC curves", color(black)) ///
+			caption("Overall cvAUC (solid red curve) and folds ROC curve (dashed curves --)", size(small)) ///
 			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
 			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
-			text(.2 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") 
-			drop sens* spec*
-		}	
-}
-			
-* Optional cross-validated fitted values in var _fit _sen and _spe
-
-if "`sen'"!="" | "`spe'"!=""{
-      local sen "`sen'"
-      local spe "`spe'"
-     
-      quietly{
-      `pro' `depvar' _fit /*`pw'*/ if `touse', `clopt'
-      lsens, gensens(_sen) genspec(_spe) nograph
-      replace _spe = (1 - _spe)
+			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") 
+		}
+	
+	drop _sens* _spec* 
+	
+	qui: rocreg `1' _fit if `touse'
+    matrix a = e(ci_bc)
+	return scalar auc_95lb = a[1,1]
+	return scalar auc_95ub = a[2,1]
+	drop _roc__fit _fpr__fit
+	
+	disp ""
+    disp as text "Model:" as result return(model)
+	disp ""
+    disp as text "Seed:" as result `seed'
+	disp ""
+	disp as text "{hline 64}"
+    disp "Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI" 
+    disp as text "{hline 64}"
+	disp as text "cvMean AUC:                 " "{c |}" %7.4f as result return(mean_auc) 
+	disp as text "Booststrap corrected 95%CI: " "{c |} " %5.4f as result return(auc_95lb) "," %7.4f as result return(auc_95ub)
+	disp as text "cvSD AUC:                   " "{c |}" %7.4f as result return(sd_auc) 	
+	disp as text "{hline 64}"
+	
+* Optional fit 
  
-      mean _sen
-      mat b = r(table)
-     
-      mean _spe
-      mat c = r(table)
-      }
-     
-      display ""
-      display "Cross-validated Sensitivity, Specificity, and 95%CI"
-      display "___________________________________________________"
-      display ""
-      }
- 
-if "`sen'"==""{
-			local textsen ""
-      }
-      else{
-            display "cv(sen):" %7.4f b[1,1] ";"  "  95%CI:" "(" %5.4f b[5,1] "," %7.4f b[6,1] ")"
-      }
-if "`spe'"=="" {
-            local textspe ""
-      }
-      else{
-            display "cv(spe):" %7.4f c[1,1] ";"  "  95%CI:" "(" %5.4f c[5,1] "," %7.4f c[6,1] ")"
-      }
- 
-if "`fit'"=="" { 
+	if "`fit'"=="" { 
 	local textfit ""
 	drop _fit
-}
-else  {
+		}
+	else  {
     local fit "`fit'"
+	}
+	
+* Optional detail 
+
+	if "`detail'"=="" { 
+	local textfit ""
+		}
+	else  {
+	local detail "`detail'"
+		
+	qui: `pro' `1' _fit `pw' if `touse', `clopt' 
+	qui: lsens, genprob(_Pred_Prob) gensens(_sen) genspec(_spe) nograph
+	disp ""
+	disp as text "{hline 66}" 
+	disp as text "Mean cross-validated Sen, Spe and false(+) at " as result "`1'" as text " predicted values"
+	disp as text "{hline 66}" 
+	local detail "`detail'"
+	qui {
+	sum `1'
+	replace _Pred_Prob = (round(_Pred_Prob,.01))
+	replace _sen = _sen*100
+	replace _spe = _spe*100
+	gen _fp = (100 - _spe)
+	}
+	disp""
+	disp as text "Prevalence of  " as result "`1'" ": " %3.2f `r(mean)'*100 "%"
+	disp as text "{hline 24}"
+	tabstat _sen _spe _fp, statistics(mean) by(_Pred_Prob) notot format(%3.2f)
+	drop _Pred_Prob _fp
 	}
 	
 end
