@@ -4,7 +4,7 @@ Receiver operating characteristic (ROC) analysis is used for comparing predictiv
 
 **cvauroc** implements k-fold cross-validation for the AUC for a binary outcome after fitting a logistic or probit regression model averaging the AUCs corresponding to each fold and bootstrapping the cross-validated AUC to obtain statistical inference and 95\% bias corrected confidence Intervals (CI). Furthermore, cvauroc optionally provides the cross-validated fitted probabilities for the dependent variable or outcome contianed in a new variable named **_fit**, the sensitivity and specificity for each level of the dependent variable, contained in two new variables named, **_sen** and **_spe** and the ploted cvAUC and k-fold roc curves.
 
-![Figure Link](https://github.com/migariane/cvAURCO/blob/master/cvROC.pdf)  
+![Figure Link](https://github.com/migariane/cvAURCO/blob/master/cvROC.png)  
 
 # Installation note 
 
