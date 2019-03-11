@@ -233,6 +233,7 @@ else {
 	local detail "`detail'"
 	qui {
 	sum `1'
+	replace _Pred_Prob = _Pred_Prob + 0.0001
 	replace _Pred_Prob = (round(_Pred_Prob,.01))
 	replace _sen = _sen*100
 	replace _spe = _spe*100
