@@ -210,6 +210,8 @@ else {
  
 	if "`fit'"=="" { 
 	local textfit ""
+	tempvar fit
+	qui: gen double `fit' = _fit
 	drop _fit
 		}
 	else  {
@@ -224,7 +226,8 @@ else {
 	else  {
 	local detail "`detail'"
 		
-	qui: `pro' `1' _fit `pw' if `touse', `clopt' 
+	qui: `pro' `1' `fit' `pw' if `touse', `clopt' 
+	gen _fit = `fit'
 	qui: lsens, genprob(_Pred_Prob) gensens(_sen) genspec(_spe) nograph
 	disp ""
 	disp as text "{hline 66}" 
@@ -234,7 +237,7 @@ else {
 	qui {
 	sum `1'
 	replace _Pred_Prob = _Pred_Prob + 0.0001
-	replace _Pred_Prob = (round(_Pred_Prob,.01))
+	replace _Pred_Prob = (round(_Pred_Prob,.001))
 	replace _sen = _sen*100
 	replace _spe = _spe*100
 	gen _fp = (100 - _spe)

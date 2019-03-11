@@ -63,7 +63,7 @@ named, {hi:_sen} and {hi:_spe}, and the plot for the mean cvAUC and k-fold ROC c
 
 {p 4 4 2}
 {bf:Detail} This option allows the user to tabulate the prevalence of the outcome, the sensitivity, specificity and false positive reates by each level of the outcome fitted probabilities.
-Furthermore, it creates two new variables containing the cross-validated sensitivity (_Sen) and specificity (_Spe) for the independent variable or predictor.
+Furthermore, in addition to (_fit), it creates two new variables containing the cross-validated sensitivity (_Sen) and specificity (_Spe) for the independent variable or predictor.
 {p_end} 
 
 
