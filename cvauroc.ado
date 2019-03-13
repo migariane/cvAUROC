@@ -48,6 +48,7 @@ program define cvauroc, rclass
 		 if "`cluster'"!="" {
 			local clopt "cluster(`cluster')"
 			}
+			
 		 capture drop _fit
 		 capture drop _fitt*
 		 capture drop _sen
@@ -121,7 +122,9 @@ else {
 	}
 	
 	qui: egen _fit = rowtotal(_fitt*)
-    drop _fitt*
+	tempvar Pp 
+	gen double `Pp' = _fit
+    drop _fitt* 
 	
 	tempvar auc
     svmat f, name(`auc')
@@ -131,18 +134,15 @@ else {
 	mat drop f
 	
 	if "`graph'"=="" {
-	
         local textgraph ""
 	}
-	
 	else {
-		
 		local graph "`graph'"	
 	
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
+	        qui: `pro' `1' `Pp' /*`pw'*/ if `touse', `clopt' 
 			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
 			qui: replace `_spe' = 1 - `_spe'
 
@@ -168,7 +168,7 @@ else {
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `1' _fit /*`pw'*/ if `touse', `clopt' 
+	        qui: `pro' `1' `Pp' /*`pw'*/ if `touse', `clopt' 
 			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
 			qui: replace `_spe' = 1 - `_spe'
 			
@@ -191,7 +191,8 @@ else {
     matrix a = e(ci_bc)
 	return scalar auc_95lb = a[1,1]
 	return scalar auc_95ub = a[2,1]
-	drop _roc__fit _fpr__fit
+	drop _roc__fit _fpr__fit 
+	drop _fit
 	
 	disp ""
     disp as text "Model:" as result return(model)
@@ -206,47 +207,58 @@ else {
 	disp as text "cvSD AUC:                   " "{c |}" %7.4f as result return(sd_auc) 	
 	disp as text "{hline 64}"
 	
-* Optional fit 
- 
+* Optional fit and detail
+
+	if "`fit'"=="" & "`detail'"=="" { 
+	local textfit ""
+	local textdetail ""
+	}
+	else{
+	local fit "`fit'"
+	local detail "`detail'"
+	}
+	
 	if "`fit'"=="" { 
 	local textfit ""
-	tempvar fit
-	qui: gen double `fit' = _fit
-	drop _fit
-		}
-	else  {
+	}
+	else {
     local fit "`fit'"
+	qui: gen double _fit = `Pp'
 	}
 	
 * Optional detail 
 
 	if "`detail'"=="" { 
-	local textfit ""
+	local textdetail ""
 		}
 	else  {
 	local detail "`detail'"
-		
-	qui: `pro' `1' `fit' `pw' if `touse', `clopt' 
-	gen _fit = `fit'
-	qui: lsens, genprob(_Pred_Prob) gensens(_sen) genspec(_spe) nograph
+
+	qui: `pro' `1' `Pp' `pw' if `touse', `clopt' 
+	
+	qui: lsens, gensens(_sen) genspec(_spe) nograph
+	
 	disp ""
 	disp as text "{hline 66}" 
 	disp as text "Mean cross-validated Sen, Spe and false(+) at " as result "`1'" as text " predicted values"
 	disp as text "{hline 66}" 
+	
 	local detail "`detail'"
-	qui {
-	sum `1'
-	replace _Pred_Prob = _Pred_Prob + 0.0001
-	replace _Pred_Prob = (round(_Pred_Prob,.001))
+	
+	qui:{ 
+	tostring `Pp', gen(_Pp) format(%3.2f) force
+	label var _Pp "Predicted Probability"
 	replace _sen = _sen*100
 	replace _spe = _spe*100
 	gen _fp = (100 - _spe)
+	sum `1'
 	}
+	
 	disp""
 	disp as text "Prevalence of  " as result "`1'" ": " %3.2f `r(mean)'*100 "%"
 	disp as text "{hline 24}"
-	tabstat _sen _spe _fp, statistics(mean) by(_Pred_Prob) notot format(%3.2f)
-	drop _Pred_Prob _fp
+	tabstat _sen _spe _fp, statistics(mean) by(_Pp) notot format(%3.2f)
+	drop _Pp _fp 
 	}
 	
 end
