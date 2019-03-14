@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Fit Graph Graphlowess Detail ]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Fit Detail Graph Graphlowess Detail]
 {p_end}
 
 
@@ -42,7 +42,7 @@ named, {hi:_sen} and {hi:_spe}, and the plot for the mean cvAUC and k-fold ROC c
 {p_end}
 
 {p 4 4 2}
-{bf:Seed}  This option allows the user to set the random seed to an integer greater than 1 (default = 7777).
+{bf:Seed} This option allows the user to set the random seed to an integer greater than 1 (default = 7777).
 {p_end} 
 
 {p 4 4 2}
@@ -50,20 +50,20 @@ named, {hi:_sen} and {hi:_spe}, and the plot for the mean cvAUC and k-fold ROC c
 {p_end} 
 
 {p 4 4 2}
-{bf:Graph} This option allows the user to graph the cross-validated ROC curve and the ROC curves for the respective k folds specified by the user.
-{p_end} 
-
-{p 4 4 2}
-{bf:Graphlowess} This option allows the user to graph a smoothed version of the cross-validated ROC curve and the ROC curves for the respective k folds specified by the user.
-{p_end} 
-
-{p 4 4 2}
 {bf:Fit} This option allows the user to generate a new variable (_fit) containing the cross-validated probabilities for the dependent variable or outcome.
 {p_end} 
 
 {p 4 4 2}
-{bf:Detail} This option allows the user to tabulate the prevalence of the outcome, the sensitivity, specificity and false positive reates by each level of the outcome fitted probabilities.
+{bf:Detail} This option allows the user to tabulate the prevalence of the outcome, the sensitivity, specificity and false positive values by each level of the outcome fitted probabilities.
 Furthermore, it creates two new variables containing the cross-validated sensitivity (_Sen) and specificity (_Spe) for the independent variable or predictor.
+{p_end} 
+
+{p 4 4 2}
+{bf:Graph} This option allows the user to graph the empirical cross-validated ROC curves for the respective k folds specified by the user.
+{p_end} 
+
+{p 4 4 2}
+{bf:Graphlowess} This option allows the user to graph a smoothed version of the mean cross-validated ROC curve and the empirical ROC curves for the respective k folds specified by the user.
 {p_end} 
 
 
@@ -95,7 +95,7 @@ Seed:1972
 Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI
 ----------------------------------------------------------------
 cvMean AUC:                 | 0.6857
-Booststrap corrected 95%CI: | 0.6391, 0.7078
+Booststrap corrected 95%CI: | 0.6348, 0.7079
 cvSD AUC:                   | 0.0578
 ----------------------------------------------------------------
 
@@ -106,17 +106,18 @@ Mean cross-validated Sen, Spe and false(+) at lbw predicted values
 Prevalence of lbw: 6.01%
 ------------------------
 
-_Pred_Prob |      _sen      _spe       _fp
------------+------------------------------
-         0 |    100.00      0.00    100.00
-       .03 |     99.04      2.34     97.66
-       .04 |     82.77     31.83     68.17
-       .05 |     64.56     65.52     34.48
-       .06 |     54.80     74.01     25.99
+ _Pp |      _sen      _spe       _fp
+-----+------------------------------
+0.01 |     99.83      0.52     99.48
+0.02 |     98.21      4.09     95.91
+0.03 |     88.82     20.12     79.88
+0.04 |     73.69     49.21     50.79
+0.05 |     66.05     64.58     35.42
+0.06 |     60.17     69.31     30.69
 	   
 (output omitted ...)
 
-         1 |      0.00    100.00      0.00
+0.39 |      0.27     99.98      0.02
 ------------------------------------------
 
 *******************************************************

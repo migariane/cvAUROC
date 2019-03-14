@@ -99,7 +99,7 @@ else {
 	tempvar fold
 	return scalar Nfolds = `kfold'
 	xtile `fold' = uniform() if `touse', nq(`kfold')
-	
+	sort `fold'
 	forvalues i = 1/`kfold' {
 	qui: count if `fold'==`i' & `touse'
 	local nb = r(N)
@@ -118,13 +118,12 @@ else {
 	qui: lsens if `fold'==`i' & `touse', gensens(_sens`i') genspec(_spec`i') nograph
 	qui: replace _spec`i' = 1 - _spec`i'
 	local g = "`g'" + " line _sens`i' _spec`i', sort lpattern(dash)||" 
-	local gl = "`gl'" + " lowess _sens`i' _spec`i', sort lpattern(dash)||" 
 	}
 	
 	qui: egen _fit = rowtotal(_fitt*)
 	tempvar Pp 
 	gen double `Pp' = _fit
-    drop _fitt* 
+    drop _fitt* _fit
 	
 	tempvar auc
     svmat f, name(`auc')
@@ -141,19 +140,14 @@ else {
 	
 			tempvar _sen
 			tempvar _spe
-			
-	        qui: `pro' `1' `Pp' /*`pw'*/ if `touse', `clopt' 
-			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
-			qui: replace `_spe' = 1 - `_spe'
 
 	        local mauc = string(round(return(mean_auc),0.001)) 
 			local sauc = string(round(return(sd_auc),0.001))
-			
-			qui: twoway line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
-			`g' line `_sen' `_spe', sort lcolor(red) lwidth(thick) ||, ///
-			saving(cvROC, replace) graphregion(fcolor(white)) ///
-			title("cvAUC and k-fold ROC curves", color(black)) ///
-			caption("Overall cvAUC (solid red curve) and k-fold ROC curves (dashed curves --)", size(small)) ///
+						
+			qui: twoway `g' || ///
+			line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
+			,saving(cvROC, replace) graphregion(fcolor(white)) ///
+			title("k-fold ROC curves", color(black)) ///
 			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
 			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
 			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") legend(off)
@@ -168,43 +162,41 @@ else {
 			tempvar _sen
 			tempvar _spe
 			
-	        qui: `pro' `1' `Pp' /*`pw'*/ if `touse', `clopt' 
-			qui: lsens, gensens(`_sen') genspec(`_spe') nograph
-			qui: replace `_spe' = 1 - `_spe'
-			
+	        qui: egen `_sen' = rowmean(_sen*)                        
+			qui: egen `_spe' = rowmean(_spe*)
+
 	        local mauc = string(round(return(mean_auc),0.001)) 
 			local sauc = string(round(return(sd_auc),0.001))
 			
-			qui: twoway `gl' lowess `_sen' `_spe', sort lcolor(red) lwidth(thick) || ///
+			qui: twoway `g' lowess `_sen' `_spe', sort lcolor(red) lwidth(thick) || ///
 			line _sens1 _sens1, sort lcolor(black) lwidth(medthick) || ///
 			, saving(cvROC, replace) graphregion(fcolor(white)) legend(off) ///
 			title("cvAUC and k-fold ROC curves", color(black)) ///
-			caption("Overall cvAUC (solid red curve) and k-fold ROC curves (dashed curves --)", size(small)) ///
+			caption("Mean cvAUC (solid red curve) and k-fold ROC curves (dashed curves --)", size(small)) ///
 			xlabel(0(0.2)1, angle(horizontal) format(%9.0g) labsize(small)) xtick(0(0.1)1) ytitle("Sensitivity") xtitle("1 - Specificity") ///
 			ylabel(0(0.2)1, labsize(small) format(%9.0g)) ytick(0(0.1)1) ///
 			text(.05 .5 "cvAUC: 0`mauc'; SD: 0`sauc'") 
 		}
 	
 	drop _sens* _spec* 
-	
-	qui: rocreg `1' _fit if `touse'
+	sort `1' `Pp' 
+	qui: rocreg `1' `Pp' if e(sample), bseed(7777) nodots 
     matrix a = e(ci_bc)
-	return scalar auc_95lb = a[1,1]
-	return scalar auc_95ub = a[2,1]
-	drop _roc__fit _fpr__fit 
-	drop _fit
+	return scalar lb = a[1,1]
+	return scalar ub = a[2,1]
+	drop _roc* _fpr* 
 	
 	disp ""
     disp as text "Model:" as result return(model)
 	disp ""
     disp as text "Seed:" as result `seed'
 	disp ""
-	disp as text "{hline 64}"
-    disp "Cross-validated (cv) mean AUC, SD and Bootstrap Corrected 95%CI" 
-    disp as text "{hline 64}"
-	disp as text "cvMean AUC:                 " "{c |}" %7.4f as result return(mean_auc) 
-	disp as text "Booststrap corrected 95%CI: " "{c |} " %5.4f as result return(auc_95lb) "," %7.4f as result return(auc_95ub)
-	disp as text "cvSD AUC:                   " "{c |}" %7.4f as result return(sd_auc) 	
+	disp as text "{hline 68}"
+    disp "Cross-validated (cv) mean AUC, SD and Bootstrap Bias Corrected 95%CI" 
+    disp as text "{hline 68}"
+	disp as text "cvMean AUC:                      " "{c |}" %7.4f as result return(mean_auc) 
+	disp as text "Bootstrap bias corrected 95%CI:  " "{c |}" %7.4f as result return(lb) "," %7.4f as result return(ub)
+	disp as text "cvSD AUC:                        " "{c |}" %7.4f as result return(sd_auc) 	
 	disp as text "{hline 64}"
 	
 * Optional fit and detail
