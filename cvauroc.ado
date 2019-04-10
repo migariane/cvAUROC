@@ -32,7 +32,7 @@ program define cvauroc, rclass
          version 10.1
          set more off
          syntax varlist(fv) [if] [pw] [, /*
-		 */ Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Detail Probit Fit Graph Graphlowess]
+		 */ Kfold(numlist max=1) Seed(numlist max=1) CLuster(varname) Detail Probit Fit graph graphlowess]
          local var `varlist'
          tokenize `var'
          local yvar = "`1'"  /*retain the y variable*/

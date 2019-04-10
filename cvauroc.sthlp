@@ -9,7 +9,7 @@
 {title:Syntax}
 
 {p 4 4 2}
-{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Fit Detail Graph Graphlowess]
+{cmd: cvauroc} {depvar} {varlist} [if] [pw] [{cmd:,} Kfold() Seed() Probit Fit Detail graph graphlowess Detail]
 {p_end}
 
 
