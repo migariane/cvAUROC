@@ -179,6 +179,11 @@ Award (CP17/00206).
 
 {title:References}
 
+
+{p 4 4 2}
+Luque-Fernandez MA, Redondo-Sánchez D, Maringe C. cvauroc: Command to compute cross-validated area under the curve for ROC analysis after predictive modeling for binary outcomes. The Stata Journal. 2019;19(3):615-625. doi:10.1177/1536867X19874237
+{p_end}
+
 {p 4 4 2}
 Miguel Angel Luque-Fernandez (2016), Crossvalidation in Epidemiology {browse "http://scholar.harvard.edu/malf/presentations/cross-validation-epidemiology": Presentation}
 {p_end}

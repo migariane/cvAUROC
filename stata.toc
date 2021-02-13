@@ -1,4 +1,4 @@
-v 1.6.2
+v 1.6.6
 d 'cvauroc': Cross-validated Area Under the Curve  {break}
 d version (release) 
 d {browse "http://www.github.com/migariane/cvauroc":GitHub} website
