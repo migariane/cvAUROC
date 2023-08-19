@@ -22,7 +22,7 @@ To uninstall the package type:
 
        ado uninstall cvauroc      
 
-**Note**: the GitHub package only works with the latest versions of Stata >13.1, otherwise you can install manually the package directly downloading the files from the GitHub repository and placing it in your Stata ADO PERSONAL folder.    
+**Note**: the GitHub package only works with the latest versions of Stata >13.1, otherwise you can install manually the package directly by downloading the files from the GitHub repository and placing them in your Stata ADO PERSONAL folder.    
 
 # Updates
 
